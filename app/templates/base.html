@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>welcome to {{title}} blog </title>
+    {% else %}
+    <title>welcome to python blog</title>
+</head>
+<div class="container">
+    <div class="nav_bar">
+        <div class="navbar-inner"><a href="/" class="brand">a_blog</a>
+            <ul class="nav">
+                <li><a href={{url_for('index')}}"">Home</a></li>
+                <li><a href="{{url_for()}}">Profile</a></li>
+                <li><a href="{{url_for('logout')}}"></a>Logout</li>
+                <li><a href="{{url_for('login')}}"></a>Login</li>
+                <li><a href="{{url_for('sign_up')}}"></a>SignUp</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="meta-nav">
+        {% if not session.login %}
+        <a href="{{url_for('login')}}">login</a>
+        {% else %}
+        <a href="{{url_for('logout')}}">logout</a>
+        {% endif %}
+    </div>
+</div>
+<div class="msg"></div>
+{%block body%}{% endblock %}
+</html>
