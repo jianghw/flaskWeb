@@ -5,6 +5,8 @@ from flask import Flask, g
 
 app = Flask(__name__)
 
+import flask_app.app.view_blog
+
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
@@ -16,8 +18,9 @@ def init_db():
     :return:
     """
     with closing(connect_db()) as db:
-        with app.open_resource('db.sql') as f:
-            db.cursor().executescript(f.read())
+        with app.open_resource('app/db.sql') as f:
+            sql = f.read().decode()
+            db.cursor().executescript(sql)
         db.commit()
 
 
@@ -33,8 +36,9 @@ def before_request():
 
 def query_db(query, args=(), one=False):
     cur = g.db.execute(query, args)
-    rv = [dict((cur.description[idx](0), value) for idx, value in enumerate(row))
-          for row in cur.fetchall()]
+    rv = [
+        dict((cur.description[idx](0), value) for idx, value in enumerate(row))
+        for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else None
 
 
@@ -46,7 +50,7 @@ def teardown_request(exception):
 
 if __name__ == '__main__':
     app.debug = True
-    app.config.from_object('blog')
+    app.config.from_object('app.blog')
 
     init_db()
     app.run(host='127.0.0.1', port='5000')
