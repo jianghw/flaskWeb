@@ -5,8 +5,6 @@ from flask import Flask, g
 
 app = Flask(__name__)
 
-import flask_app.app.view_blog
-
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
